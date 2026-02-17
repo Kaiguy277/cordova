@@ -10,7 +10,7 @@ const VIEW_W = 800; // logical viewport width
 /* ─── Era infrastructure segments ─── */
 
 const DieselPlant = () => (
-  <g transform="translate(200, 0)">
+  <g transform="translate(500, 0)">
     {/* Main building */}
     <rect x={0} y={220} width={120} height={80} fill="hsl(220, 10%, 25%)" />
     <rect x={10} y={200} width={100} height={20} fill="hsl(220, 10%, 30%)" />
@@ -41,7 +41,7 @@ const DieselPlant = () => (
 );
 
 const PowerCreekDam = () => (
-  <g transform="translate(900, 0)">
+  <g transform="translate(1200, 0)">
     {/* Dam structure — run-of-river */}
     <polygon points="0,300 25,180 85,180 110,300" fill="hsl(200, 10%, 40%)" />
     <rect x={30} y={175} width={50} height={8} fill="hsl(200, 10%, 45%)" />
@@ -69,7 +69,7 @@ const PowerCreekDam = () => (
 );
 
 const HumpbackCreek = () => (
-  <g transform="translate(1700, 0)">
+  <g transform="translate(1950, 0)">
     {/* Smaller dam */}
     <polygon points="0,300 18,210 65,210 83,300" fill="hsl(200, 12%, 38%)" />
     {/* Three turbine housings */}
@@ -96,7 +96,7 @@ const HumpbackCreek = () => (
 );
 
 const BatteryStorage = () => (
-  <g transform="translate(2500, 0)">
+  <g transform="translate(2650, 0)">
     {/* Battery container */}
     <rect x={0} y={250} width={80} height={50} fill="hsl(150, 30%, 28%)" rx={4} />
     {[8, 28, 48].map((x, i) => (
@@ -119,7 +119,7 @@ const BatteryStorage = () => (
 );
 
 const GreenSPARCDataCenter = () => (
-  <g transform="translate(3300, 0)">
+  <g transform="translate(3350, 0)">
     {/* Container building */}
     <rect x={0} y={238} width={100} height={62} fill="hsl(200, 15%, 26%)" rx={3} />
     {/* Server racks */}
@@ -144,7 +144,7 @@ const GreenSPARCDataCenter = () => (
 );
 
 const RatePressuresSign = () => (
-  <g transform="translate(4000, 0)">
+  <g transform="translate(4050, 0)">
     {/* CEC office building */}
     <rect x={0} y={245} width={70} height={55} fill="hsl(210, 12%, 30%)" rx={2} />
     <rect x={10} y={255} width={10} height={10} fill="hsl(40, 60%, 55%)" opacity={0.5} />
@@ -161,7 +161,7 @@ const RatePressuresSign = () => (
 );
 
 const HumpbackUpgrade = () => (
-  <g transform="translate(4700, 0)">
+  <g transform="translate(4750, 0)">
     {/* Upgraded dam — larger */}
     <polygon points="0,300 25,195 90,195 115,300" fill="hsl(200, 15%, 42%)" />
     <rect x={28} y={190} width={60} height={8} fill="hsl(200, 15%, 48%)" />
@@ -182,7 +182,7 @@ const HumpbackUpgrade = () => (
 );
 
 const FutureReservoir = () => (
-  <g transform="translate(5500, 0)">
+  <g transform="translate(5450, 0)">
     {/* Large reservoir */}
     <ellipse cx={100} cy={260} rx={120} ry={30} fill="hsl(200, 50%, 40%)" opacity={0.5} />
     <ellipse cx={100} cy={260} rx={100} ry={22} fill="hsl(200, 55%, 45%)" opacity={0.6} />
