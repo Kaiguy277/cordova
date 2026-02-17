@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 8%;
+    --foreground: 40 20% 85%;
+
+    --card: 220 18% 12%;
+    --card-foreground: 40 20% 85%;
+
+    --popover: 220 18% 12%;
+    --popover-foreground: 40 20% 85%;
+
+    --primary: 35 80% 55%;
+    --primary-foreground: 220 20% 8%;
+
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 40 20% 85%;
+
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 50%;
+
+    --accent: 35 60% 45%;
+    --accent-foreground: 40 20% 90%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 35 80% 55%;
+
+    --radius: 0.5rem;
+
+    --ground: 30 15% 18%;
+    --sky-top: 220 25% 6%;
+    --sky-bottom: 220 20% 12%;
+    --silhouette: 220 20% 5%;
+    --dust: 35 30% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Georgia', serif;
+  }
+}
+
+@keyframes scroll-bg {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes walk-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes leg-left {
+  0% { transform: rotate(25deg); }
+  50% { transform: rotate(-25deg); }
+  100% { transform: rotate(25deg); }
+}
+
+@keyframes leg-right {
+  0% { transform: rotate(-25deg); }
+  50% { transform: rotate(25deg); }
+  100% { transform: rotate(-25deg); }
+}
+
+@keyframes arm-left {
+  0% { transform: rotate(-20deg); }
+  50% { transform: rotate(20deg); }
+  100% { transform: rotate(-20deg); }
+}
+
+@keyframes arm-right {
+  0% { transform: rotate(20deg); }
+  50% { transform: rotate(-20deg); }
+  100% { transform: rotate(20deg); }
+}
+
+@keyframes dust-particle {
+  0% { opacity: 0.6; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(30px, -15px) scale(0.3); }
+}
