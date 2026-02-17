@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { phases } from '@/data/phases';
 import { storyBeats } from '@/data/storyBeats';
 import MetricsBanner from '@/components/MetricsBanner';
@@ -39,6 +39,24 @@ const WalkingScene = () => {
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
 
+  // Compute background progress that only moves during walk beats.
+  // We assign scroll "weight" to each beat: walk beats move the bg, dialogue beats don't.
+  const backgroundProgress = useMemo(() => {
+    // Build cumulative weights: walk = 1, dialogue = 0
+    const weights = storyBeats.map(b => b.type === 'walk' ? 1 : 0);
+    const totalWeight = weights.reduce((a, b) => a + b, 0);
+    if (totalWeight === 0) return 0;
+
+    // Sum weights up to current beat index
+    const weightBefore = weights.slice(0, currentBeatIndex).reduce((a, b) => a + b, 0);
+    // Add partial progress within current beat if it's a walk beat
+    const currentWeight = weights[currentBeatIndex];
+    const beatFraction = (scrollProgress * totalBeats) - currentBeatIndex;
+    const accumulated = weightBefore + (currentWeight * Math.max(0, Math.min(1, beatFraction)));
+
+    return accumulated / totalWeight;
+  }, [currentBeatIndex, scrollProgress, totalBeats]);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -73,7 +91,7 @@ const WalkingScene = () => {
       {/* Fixed viewport overlay */}
       <div className="fixed inset-0 overflow-hidden select-none pointer-events-none">
         {/* Background */}
-        <PhaseBackground scrollProgress={scrollProgress} isWalking={isWalking} />
+        <PhaseBackground scrollProgress={backgroundProgress} isWalking={isWalking} />
 
         {/* Stats HUD */}
         <MetricsBanner
