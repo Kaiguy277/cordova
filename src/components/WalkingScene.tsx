@@ -39,23 +39,46 @@ const WalkingScene = () => {
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
 
-  // Compute background progress that only moves during walk beats.
-  // We assign scroll "weight" to each beat: walk beats move the bg, dialogue beats don't.
+  // Target background offsets that center each phase's infrastructure in the viewport.
+  // Infrastructure x-positions from PhaseBackground: Diesel=200, PowerCreek=900, Humpback=1700,
+  // Battery=2500, GreenSPARC=3300, RatePressures=4000, HumpbackUpgrade=4700, FutureReservoir=5500
+  const SCENE_WIDTH = 6400;
+  const VIEW_W = 800;
+  const maxOffset = SCENE_WIDTH - VIEW_W;
+  const phaseTargetOffsets = [
+    Math.max(0, 260 - VIEW_W * 0.3),    // Phase 0: Diesel Plant
+    Math.max(0, 960 - VIEW_W * 0.3),    // Phase 1: Power Creek
+    Math.max(0, 1750 - VIEW_W * 0.3),   // Phase 2: Humpback Creek
+    Math.max(0, 2540 - VIEW_W * 0.3),   // Phase 3: Battery Storage
+    Math.max(0, 3350 - VIEW_W * 0.3),   // Phase 4: GreenSPARC
+    Math.max(0, 4050 - VIEW_W * 0.3),   // Phase 5: Rate Pressures
+    Math.max(0, 4750 - VIEW_W * 0.3),   // Phase 6: Humpback Upgrade
+    Math.min(maxOffset, 5550 - VIEW_W * 0.3), // Phase 7: Future Reservoir
+  ];
+
+  // Compute background offset: interpolate between phase targets during walk beats, hold during dialogue.
   const backgroundProgress = useMemo(() => {
-    // Build cumulative weights: walk = 1, dialogue = 0
-    const weights = storyBeats.map(b => b.type === 'walk' ? 1 : 0);
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    if (totalWeight === 0) return 0;
+    const bgPhaseIndex = beat.phaseIndex;
+    const targetOffset = phaseTargetOffsets[bgPhaseIndex];
 
-    // Sum weights up to current beat index
-    const weightBefore = weights.slice(0, currentBeatIndex).reduce((a, b) => a + b, 0);
-    // Add partial progress within current beat if it's a walk beat
-    const currentWeight = weights[currentBeatIndex];
-    const beatFraction = (scrollProgress * totalBeats) - currentBeatIndex;
-    const accumulated = weightBefore + (currentWeight * Math.max(0, Math.min(1, beatFraction)));
+    // Find previous phase target for interpolation during walk beats
+    if (beat.type === 'walk') {
+      const prevPhaseIndex = Math.max(0, bgPhaseIndex - 1);
+      const prevOffset = phaseTargetOffsets[prevPhaseIndex];
+      // Get progress within current beat
+      const beatFraction = Math.max(0, Math.min(1, (scrollProgress * totalBeats) - currentBeatIndex));
 
-    return accumulated / totalWeight;
-  }, [currentBeatIndex, scrollProgress, totalBeats]);
+      // If this walk's metricsPhaseIndex differs from phaseIndex, we're transitioning — interpolate
+      if (beat.metricsPhaseIndex !== undefined && beat.metricsPhaseIndex < bgPhaseIndex) {
+        return (prevOffset + (targetOffset - prevOffset) * beatFraction) / maxOffset;
+      }
+      // Otherwise hold at target
+      return targetOffset / maxOffset;
+    }
+
+    // During dialogue, hold at phase target
+    return targetOffset / maxOffset;
+  }, [currentBeatIndex, scrollProgress, totalBeats, beat]);
 
   useEffect(() => {
     const container = containerRef.current;
