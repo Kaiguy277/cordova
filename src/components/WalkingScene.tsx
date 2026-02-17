@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { phases } from '@/data/phases';
-import { storyBeats } from '@/data/storyBeats';
+import { storyBeats, type NPCType } from '@/data/storyBeats';
 import MetricsBanner from '@/components/MetricsBanner';
 import PhaseBackground from '@/components/PhaseBackground';
 import WalkingMan from '@/components/WalkingMan';
@@ -38,6 +38,20 @@ const WalkingScene = () => {
 
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
+
+  // Collect all unique NPCs in the current phase's dialogue group
+  const phaseNPCs = useMemo(() => {
+    const phase = beat.phaseIndex;
+    const npcs: NPCType[] = [];
+    const seen = new Set<NPCType>();
+    for (const b of storyBeats) {
+      if (b.phaseIndex === phase && b.type === 'dialogue' && b.npc && !seen.has(b.npc)) {
+        seen.add(b.npc);
+        npcs.push(b.npc);
+      }
+    }
+    return npcs;
+  }, [beat.phaseIndex]);
 
   // Background pans evenly across all walk beats; holds during dialogue.
   const backgroundProgress = useMemo(() => {
@@ -106,10 +120,10 @@ const WalkingScene = () => {
           {/* Walking man */}
           <WalkingMan isWalking={isWalking} />
 
-          {/* NPC */}
-          {beat.npc && (
-            <NPCCharacter type={beat.npc} visible={isDialogue} />
-          )}
+          {/* NPCs — show all characters from current phase dialogue group */}
+          {phaseNPCs.map((npcType) => (
+            <NPCCharacter key={npcType} type={npcType} visible={isDialogue} />
+          ))}
         </div>
 
         {isWalking && <DustParticles />}
