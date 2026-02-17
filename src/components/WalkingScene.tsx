@@ -33,13 +33,11 @@ const WalkingScene = () => {
 
   const totalBeats = storyBeats.length;
   const beat = storyBeats[currentBeatIndex];
-  const phase = phases[beat.phaseIndex];
+  const metricsPhaseIndex = beat.metricsPhaseIndex ?? beat.phaseIndex;
+  const phase = phases[metricsPhaseIndex];
 
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
-
-  // Track phase index for metrics banner
-  const currentPhaseIndex = beat.phaseIndex;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -79,7 +77,7 @@ const WalkingScene = () => {
 
         {/* Stats HUD */}
         <MetricsBanner
-          currentPhaseIndex={currentPhaseIndex}
+          currentPhaseIndex={metricsPhaseIndex}
           phaseTitle={phase.title}
           phaseSubtitle={phase.subtitle}
         />
@@ -132,8 +130,8 @@ const WalkingScene = () => {
               key={i}
               className="w-2 h-2 rounded-full transition-all duration-300"
               style={{
-                backgroundColor: i === currentPhaseIndex ? 'hsl(var(--primary))' : 'hsla(var(--foreground), 0.3)',
-                transform: i === currentPhaseIndex ? 'scale(1.4)' : 'scale(1)',
+                backgroundColor: i === metricsPhaseIndex ? 'hsl(var(--primary))' : 'hsla(var(--foreground), 0.3)',
+                transform: i === metricsPhaseIndex ? 'scale(1.4)' : 'scale(1)',
               }}
             />
           ))}
