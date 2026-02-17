@@ -39,50 +39,22 @@ const WalkingScene = () => {
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
 
-  // Target background offsets that center each phase's infrastructure in the viewport.
-  // Infrastructure x-positions from PhaseBackground: Diesel=200, PowerCreek=900, Humpback=1700,
-  // Battery=2500, GreenSPARC=3300, RatePressures=4000, HumpbackUpgrade=4700, FutureReservoir=5500
-  const SCENE_WIDTH = 6400;
-  const VIEW_W = 800;
-  const maxOffset = SCENE_WIDTH - VIEW_W;
-  const phaseTargetOffsets = [
-    Math.max(0, 260 - VIEW_W * 0.3),    // Phase 0: Diesel Plant
-    Math.max(0, 960 - VIEW_W * 0.3),    // Phase 1: Power Creek
-    Math.max(0, 1750 - VIEW_W * 0.3),   // Phase 2: Humpback Creek
-    Math.max(0, 2540 - VIEW_W * 0.3),   // Phase 3: Battery Storage
-    Math.max(0, 3350 - VIEW_W * 0.3),   // Phase 4: GreenSPARC
-    Math.max(0, 4050 - VIEW_W * 0.3),   // Phase 5: Rate Pressures
-    Math.max(0, 4750 - VIEW_W * 0.3),   // Phase 6: Humpback Upgrade
-    Math.min(maxOffset, 5550 - VIEW_W * 0.3), // Phase 7: Future Reservoir
-  ];
-
-  // Compute background offset: smoothly pan during walk beats, hold during dialogue.
+  // Background pans evenly across all walk beats; holds during dialogue.
   const backgroundProgress = useMemo(() => {
-    const bgPhaseIndex = beat.phaseIndex;
-    const targetOffset = phaseTargetOffsets[bgPhaseIndex];
+    const walkIndices = storyBeats.map((b, i) => b.type === 'walk' ? i : -1).filter(i => i >= 0);
+    const totalWalks = walkIndices.length;
+    if (totalWalks === 0) return 0;
 
-    if (beat.type === 'walk') {
-      // Find which walk beat this is within the phase (first or last)
-      // First walk of a phase transitions FROM previous phase, last walk holds at current
-      const prevPhaseIndex = Math.max(0, bgPhaseIndex - 1);
-      const prevOffset = phaseTargetOffsets[prevPhaseIndex];
-      const beatFraction = Math.max(0, Math.min(1, (scrollProgress * totalBeats) - currentBeatIndex));
+    // How many walk beats are fully completed before current beat?
+    const completedWalks = walkIndices.filter(i => i < currentBeatIndex).length;
 
-      // Check if this is the first beat of a new phase (transition beat)
-      const prevBeat = currentBeatIndex > 0 ? storyBeats[currentBeatIndex - 1] : null;
-      const isTransitionWalk = prevBeat && prevBeat.phaseIndex < bgPhaseIndex;
+    // If current beat is a walk, add fractional progress within it
+    const isCurrentWalk = beat.type === 'walk';
+    const beatFraction = isCurrentWalk
+      ? Math.max(0, Math.min(1, (scrollProgress * totalBeats) - currentBeatIndex))
+      : 0;
 
-      if (isTransitionWalk || (currentBeatIndex > 0 && prevBeat?.phaseIndex !== bgPhaseIndex)) {
-        // Smoothly interpolate from previous phase position to current
-        return (prevOffset + (targetOffset - prevOffset) * beatFraction) / maxOffset;
-      }
-
-      // Same-phase walk: hold at current target
-      return targetOffset / maxOffset;
-    }
-
-    // During dialogue, hold at phase target
-    return targetOffset / maxOffset;
+    return (completedWalks + beatFraction) / totalWalks;
   }, [currentBeatIndex, scrollProgress, totalBeats, beat]);
 
   useEffect(() => {
