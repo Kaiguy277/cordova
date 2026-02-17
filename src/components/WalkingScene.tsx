@@ -85,8 +85,8 @@ const WalkingScene = () => {
 
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-y-scroll" style={{ scrollBehavior: 'smooth' }}>
-      {/* Scroll space — more room per beat for slower pacing */}
-      <div style={{ height: `${totalBeats * 70}vh` }} />
+      {/* Scroll space */}
+      <div style={{ height: `${totalBeats * 100}vh` }} />
 
       {/* Fixed viewport overlay */}
       <div className="fixed inset-0 overflow-hidden select-none pointer-events-none">
