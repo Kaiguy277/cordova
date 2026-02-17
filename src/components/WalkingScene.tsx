@@ -56,23 +56,28 @@ const WalkingScene = () => {
     Math.min(maxOffset, 5550 - VIEW_W * 0.3), // Phase 7: Future Reservoir
   ];
 
-  // Compute background offset: interpolate between phase targets during walk beats, hold during dialogue.
+  // Compute background offset: smoothly pan during walk beats, hold during dialogue.
   const backgroundProgress = useMemo(() => {
     const bgPhaseIndex = beat.phaseIndex;
     const targetOffset = phaseTargetOffsets[bgPhaseIndex];
 
-    // Find previous phase target for interpolation during walk beats
     if (beat.type === 'walk') {
+      // Find which walk beat this is within the phase (first or last)
+      // First walk of a phase transitions FROM previous phase, last walk holds at current
       const prevPhaseIndex = Math.max(0, bgPhaseIndex - 1);
       const prevOffset = phaseTargetOffsets[prevPhaseIndex];
-      // Get progress within current beat
       const beatFraction = Math.max(0, Math.min(1, (scrollProgress * totalBeats) - currentBeatIndex));
 
-      // If this walk's metricsPhaseIndex differs from phaseIndex, we're transitioning — interpolate
-      if (beat.metricsPhaseIndex !== undefined && beat.metricsPhaseIndex < bgPhaseIndex) {
+      // Check if this is the first beat of a new phase (transition beat)
+      const prevBeat = currentBeatIndex > 0 ? storyBeats[currentBeatIndex - 1] : null;
+      const isTransitionWalk = prevBeat && prevBeat.phaseIndex < bgPhaseIndex;
+
+      if (isTransitionWalk || (currentBeatIndex > 0 && prevBeat?.phaseIndex !== bgPhaseIndex)) {
+        // Smoothly interpolate from previous phase position to current
         return (prevOffset + (targetOffset - prevOffset) * beatFraction) / maxOffset;
       }
-      // Otherwise hold at target
+
+      // Same-phase walk: hold at current target
       return targetOffset / maxOffset;
     }
 
