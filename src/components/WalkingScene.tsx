@@ -129,31 +129,53 @@ const WalkingScene = () => {
         {isWalking && <DustParticles />}
 
         {/* Dialogue box */}
-        {isDialogue && beat.speaker && beat.text && (
-          <div className="absolute bottom-[38%] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
-            <div
-              className="rounded-xl px-5 py-4 border"
-              style={{
-                backgroundColor: 'hsla(220, 20%, 10%, 0.92)',
-                borderColor: 'hsl(var(--border))',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
+        {isDialogue && beat.speaker && beat.text && (() => {
+          // Find which NPC index is speaking to position the tail
+          const speakerNpcIndex = beat.npc ? phaseNPCs.indexOf(beat.npc) : 0;
+          // Offset tail: center for single, left/right for multiple
+          const tailOffset = phaseNPCs.length <= 1
+            ? 0
+            : ((speakerNpcIndex / (phaseNPCs.length - 1)) - 0.5) * 60;
+
+          return (
+            <div className="absolute bottom-[38%] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
               <div
-                className="text-xs uppercase tracking-wider mb-1.5 font-bold"
-                style={{ color: 'hsl(var(--primary))' }}
+                className="rounded-xl px-5 py-4 border relative"
+                style={{
+                  backgroundColor: 'hsla(220, 20%, 10%, 0.92)',
+                  borderColor: 'hsl(var(--border))',
+                  backdropFilter: 'blur(8px)',
+                }}
               >
-                {beat.speaker}
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: 'hsl(var(--foreground))' }}>
-                {beat.text}
-              </p>
-              <div className="text-right mt-2 text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                ↓ Scroll to continue
+                {/* Speech bubble tail */}
+                <div
+                  className="absolute -bottom-2.5"
+                  style={{
+                    left: `calc(50% + ${tailOffset}px)`,
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '8px solid transparent',
+                    borderRight: '8px solid transparent',
+                    borderTop: '10px solid hsla(220, 20%, 10%, 0.92)',
+                  }}
+                />
+                <div
+                  className="text-xs uppercase tracking-wider mb-1.5 font-bold"
+                  style={{ color: 'hsl(var(--primary))' }}
+                >
+                  {beat.speaker}
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: 'hsl(var(--foreground))' }}>
+                  {beat.text}
+                </p>
+                <div className="text-right mt-2 text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  ↓ Scroll to continue
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Progress indicator */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-1.5">
