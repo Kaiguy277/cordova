@@ -144,7 +144,7 @@ const WalkingScene = () => {
           const tailOffset = npcCenterX - groupCenter;
 
           return (
-            <div className="absolute bottom-[32%] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
+            <div className="absolute bottom-[calc(32%+22px)] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
               <div
                 className="rounded-xl px-5 py-4 border relative"
                 style={{
