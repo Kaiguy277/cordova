@@ -130,15 +130,21 @@ const WalkingScene = () => {
 
         {/* Dialogue box */}
         {isDialogue && beat.speaker && beat.text && (() => {
-          // Find which NPC index is speaking to position the tail
+          // Calculate where the speaking NPC is relative to the character group center
           const speakerNpcIndex = beat.npc ? phaseNPCs.indexOf(beat.npc) : 0;
-          // Offset tail: center for single, left/right for multiple
-          const tailOffset = phaseNPCs.length <= 1
-            ? 0
-            : ((speakerNpcIndex / (phaseNPCs.length - 1)) - 0.5) * 60;
+          const walkingManWidth = 38;
+          const npcWidth = 65;
+          const gap = 24;
+          // Total group width: walkingMan + gap + (npcCount * npcWidth) + ((npcCount-1) * gap)
+          const npcCount = phaseNPCs.length;
+          const totalWidth = walkingManWidth + gap + (npcCount * npcWidth) + (Math.max(0, npcCount - 1) * gap);
+          const groupCenter = totalWidth / 2;
+          // NPC center position within the group
+          const npcCenterX = walkingManWidth + gap + (speakerNpcIndex * (npcWidth + gap)) + npcWidth / 2;
+          const tailOffset = npcCenterX - groupCenter;
 
           return (
-            <div className="absolute bottom-[38%] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
+            <div className="absolute bottom-[32%] left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg">
               <div
                 className="rounded-xl px-5 py-4 border relative"
                 style={{
@@ -149,15 +155,15 @@ const WalkingScene = () => {
               >
                 {/* Speech bubble tail */}
                 <div
-                  className="absolute -bottom-2.5"
+                  className="absolute -bottom-3"
                   style={{
                     left: `calc(50% + ${tailOffset}px)`,
                     transform: 'translateX(-50%)',
                     width: 0,
                     height: 0,
-                    borderLeft: '8px solid transparent',
-                    borderRight: '8px solid transparent',
-                    borderTop: '10px solid hsla(220, 20%, 10%, 0.92)',
+                    borderLeft: '10px solid transparent',
+                    borderRight: '10px solid transparent',
+                    borderTop: '14px solid hsla(220, 20%, 10%, 0.92)',
                   }}
                 />
                 <div
