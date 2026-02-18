@@ -39,15 +39,15 @@ const WalkingScene = () => {
   const isWalking = beat.type === 'walk' && isScrolling;
   const isDialogue = beat.type === 'dialogue';
 
-  // Collect all unique NPCs in the current phase's dialogue group, with their speaker names
+  // Collect all unique NPCs in the current phase's dialogue group
   const phaseNPCs = useMemo(() => {
     const phase = beat.phaseIndex;
-    const npcs: { type: NPCType; name: string }[] = [];
+    const npcs: NPCType[] = [];
     const seen = new Set<NPCType>();
     for (const b of storyBeats) {
       if (b.phaseIndex === phase && b.type === 'dialogue' && b.npc && !seen.has(b.npc)) {
         seen.add(b.npc);
-        npcs.push({ type: b.npc, name: b.speaker || b.npc });
+        npcs.push(b.npc);
       }
     }
     return npcs;
@@ -121,14 +121,8 @@ const WalkingScene = () => {
           <WalkingMan isWalking={isWalking} />
 
           {/* NPCs — show all characters from current phase dialogue group */}
-          {phaseNPCs.map((npc) => (
-            <NPCCharacter
-              key={npc.type}
-              type={npc.type}
-              visible={isDialogue}
-              isActive={isDialogue && beat.npc === npc.type}
-              speakerName={npc.name}
-            />
+          {phaseNPCs.map((npcType) => (
+            <NPCCharacter key={npcType} type={npcType} visible={isDialogue} />
           ))}
         </div>
 

@@ -52,11 +52,9 @@ const npcConfig: Record<NPCType, {
 interface NPCCharacterProps {
   type: NPCType;
   visible: boolean;
-  isActive?: boolean;
-  speakerName?: string;
 }
 
-const NPCCharacter = ({ type, visible, isActive, speakerName }: NPCCharacterProps) => {
+const NPCCharacter = ({ type, visible }: NPCCharacterProps) => {
   const cfg = npcConfig[type];
 
   return (
@@ -69,30 +67,6 @@ const NPCCharacter = ({ type, visible, isActive, speakerName }: NPCCharacterProp
         transform: visible ? 'translateX(0) scale(1)' : 'translateX(40px) scale(0.8)',
       }}
     >
-      {/* Speaker indicator */}
-      {visible && speakerName && (
-        <div
-          className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full transition-all duration-300"
-          style={{
-            backgroundColor: isActive ? 'hsl(var(--primary))' : 'hsla(var(--foreground), 0.15)',
-            color: isActive ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
-            transform: isActive ? 'scale(1.1)' : 'scale(0.9)',
-            opacity: isActive ? 1 : 0.5,
-          }}
-        >
-          {speakerName}
-        </div>
-      )}
-      {/* Active glow */}
-      {isActive && visible && (
-        <div
-          className="absolute inset-0 rounded-full animate-pulse"
-          style={{
-            boxShadow: '0 0 20px 4px hsla(var(--primary), 0.3)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
       {/* Head */}
       <div
         className="absolute rounded-full"
