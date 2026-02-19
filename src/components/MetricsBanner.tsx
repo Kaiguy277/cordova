@@ -126,7 +126,7 @@ const MetricsBanner = ({ currentPhaseIndex, phaseTitle, phaseSubtitle }: Metrics
       <div className="grid grid-cols-3 md:grid-cols-5 gap-2 px-3 mt-2 max-w-4xl mx-auto">
         <LineChart icon="⚡" label="Rate" values={allMetrics.map(m => m.energyRate)} currentIndex={currentPhaseIndex} color="hsl(35, 80%, 55%)" format={v => `${v}¢/kWh`} />
         <LineChart icon="🛢️" label="Diesel" values={allMetrics.map(m => m.dieselGallons)} currentIndex={currentPhaseIndex} color="hsl(0, 60%, 50%)" format={formatGallons} />
-        <LineChart icon="💰" label="Saved" values={allMetrics.map(m => Math.round((1500000 - m.dieselGallons) * 4.5))} currentIndex={currentPhaseIndex} color="hsl(50, 75%, 55%)" format={v => v === 0 ? '$0' : `$${(v / 1_000_000).toFixed(1)}M`} />
+        <LineChart icon="💰" label="Saved" values={allMetrics.map(m => Math.round((1513176 - m.dieselGallons) * m.dieselPricePerGal))} currentIndex={currentPhaseIndex} color="hsl(50, 75%, 55%)" format={v => v <= 0 ? '$0' : `$${(v / 1_000_000).toFixed(1)}M`} />
         <LineChart icon="💧" label="Hydro" values={allMetrics.map(m => m.hydroPercent)} currentIndex={currentPhaseIndex} color="hsl(200, 60%, 50%)" format={v => `${v}%`} />
         <LineChart icon="🔋" label="Capacity" values={allMetrics.map(m => m.hydroCapacity)} currentIndex={currentPhaseIndex} color="hsl(150, 60%, 45%)" format={v => `${v}MW`} />
       </div>
