@@ -50,7 +50,7 @@ export const storyBeats: StoryBeat[] = [
   {
     type: 'dialogue', phaseIndex: 2, npc: 'cec-worker',
     speaker: 'CEC Lineman',
-    text: "That's a quarter million fewer gallons of diesel every year. We're at seventy-five percent hydro now.",
+    text: "Humpback is rated to displace two hundred fifty thousand gallons of diesel in a good water year. But load keeps growing — we're at sixty-two percent hydro, and diesel is stubbornly high.",
   },
   { type: 'walk', phaseIndex: 2 },
 
@@ -64,7 +64,7 @@ export const storyBeats: StoryBeat[] = [
   {
     type: 'dialogue', phaseIndex: 3, npc: 'cec-worker',
     speaker: 'CEC Lineman',
-    text: "2023 was our best year ever — four outages, seventy-five minutes total. And we hit 21.4 million kilowatt-hours of hydro. Record.",
+    text: "2023 was our best year ever — four outages, seventy-five minutes total. And we hit 22.1 million kilowatt-hours of hydro. Record.",
   },
   {
     type: 'dialogue', phaseIndex: 3, npc: 'fisherman',
