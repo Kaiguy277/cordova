@@ -208,55 +208,196 @@ const FutureReservoir = () => (
   </g>
 );
 
-/* ─── Fishing village scattered throughout ─── */
-const VillageHouses = () => {
-  const houses = [
-    { x: 550, w: 35, h: 40, color: 'hsl(10, 50%, 45%)', roofColor: 'hsl(20, 40%, 30%)' },
-    { x: 1350, w: 40, h: 42, color: 'hsl(40, 45%, 55%)', roofColor: 'hsl(25, 35%, 35%)' },
-    { x: 1500, w: 32, h: 36, color: 'hsl(200, 30%, 55%)', roofColor: 'hsl(210, 25%, 30%)' },
-    { x: 2150, w: 38, h: 44, color: 'hsl(5, 45%, 48%)', roofColor: 'hsl(10, 35%, 28%)' },
-    { x: 2300, w: 34, h: 38, color: 'hsl(30, 40%, 50%)', roofColor: 'hsl(20, 30%, 30%)' },
-    { x: 3100, w: 36, h: 40, color: 'hsl(10, 50%, 45%)', roofColor: 'hsl(20, 40%, 30%)' },
-    { x: 3700, w: 40, h: 42, color: 'hsl(200, 30%, 55%)', roofColor: 'hsl(210, 25%, 30%)' },
-    { x: 4400, w: 35, h: 38, color: 'hsl(40, 45%, 55%)', roofColor: 'hsl(25, 35%, 35%)' },
-    { x: 5100, w: 38, h: 44, color: 'hsl(5, 45%, 48%)', roofColor: 'hsl(10, 35%, 28%)' },
-    { x: 5900, w: 36, h: 40, color: 'hsl(30, 40%, 50%)', roofColor: 'hsl(20, 30%, 30%)' },
+/* ─── Mountain range backdrop ─── */
+const Mountains = () => {
+  const peaks = [
+    { x: -80, peak: 118, w: 580 }, { x: 380, peak: 88, w: 660 },
+    { x: 880, peak: 104, w: 600 }, { x: 1350, peak: 92, w: 620 },
+    { x: 1800, peak: 112, w: 640 }, { x: 2280, peak: 82, w: 580 },
+    { x: 2700, peak: 98, w: 610 }, { x: 3150, peak: 108, w: 590 },
+    { x: 3600, peak: 86, w: 630 }, { x: 4080, peak: 116, w: 600 },
+    { x: 4540, peak: 94, w: 570 }, { x: 4980, peak: 102, w: 610 },
+    { x: 5450, peak: 88, w: 580 }, { x: 5880, peak: 110, w: 650 },
   ];
-
   return (
     <g>
-      {houses.map((h, i) => (
-        <g key={`house-${i}`}>
-          <rect x={h.x} y={300 - h.h} width={h.w} height={h.h} fill={h.color} />
+      {peaks.map((m, i) => (
+        <g key={`mt-${i}`} opacity={0.42 + (i % 3) * 0.04}>
           <polygon
-            points={`${h.x - 3},${300 - h.h} ${h.x + h.w / 2},${300 - h.h - 14} ${h.x + h.w + 3},${300 - h.h}`}
-            fill={h.roofColor}
+            points={`${m.x},252 ${m.x + m.w / 2},${m.peak} ${m.x + m.w},252`}
+            fill={`hsl(210, ${10 + (i % 3) * 3}%, ${22 + (i % 4) * 2}%)`}
           />
-          <rect x={h.x + h.w / 2 - 4} y={300 - 14} width={8} height={14} fill="hsl(25, 30%, 22%)" rx={1} />
-          <rect x={h.x + 5} y={300 - h.h + 8} width={7} height={7} fill="hsl(45, 60%, 65%)" rx={1} opacity={0.6} />
+          {/* Snow cap */}
+          <polygon
+            points={`${m.x + m.w / 2 - 28},${m.peak + 38} ${m.x + m.w / 2},${m.peak} ${m.x + m.w / 2 + 28},${m.peak + 38}`}
+            fill="hsl(210, 25%, 72%)" opacity={0.35}
+          />
         </g>
       ))}
     </g>
   );
 };
 
-/* Boats near the harbor areas */
-const Boats = () => (
+/* ─── Lighthouse ─── */
+const Lighthouse = () => (
+  <g transform="translate(295, 0)">
+    <ellipse cx={12} cy={299} rx={18} ry={5} fill="hsl(200, 10%, 28%)" opacity={0.7} />
+    <polygon points="4,298 6,218 18,218 20,298" fill="hsl(0, 0%, 72%)" />
+    <rect x={4} y={244} width={16} height={10} fill="hsl(0, 65%, 48%)" opacity={0.8} />
+    <rect x={5} y={268} width={14} height={10} fill="hsl(0, 65%, 48%)" opacity={0.8} />
+    <rect x={2} y={212} width={20} height={8} fill="hsl(210, 15%, 48%)" rx={1} />
+    <ellipse cx={12} cy={212} rx={14} ry={5} fill="hsl(45, 90%, 62%)" opacity={0.28} />
+    <line x1={0} y1={211} x2={24} y2={211} stroke="hsl(0, 0%, 52%)" strokeWidth={1} />
+    <text x={12} y={208} textAnchor="middle" fontSize={5} fill="hsl(40, 50%, 55%)" fontFamily="monospace">⚓</text>
+  </g>
+);
+
+/* ─── Fish cannery / processing plant ─── */
+const FishCannery = () => (
+  <g transform="translate(690, 0)">
+    <rect x={0} y={228} width={95} height={72} fill="hsl(200, 14%, 28%)" rx={2} />
+    <rect x={3} y={220} width={89} height={10} fill="hsl(200, 12%, 33%)" />
+    {[6, 17, 28, 39, 50, 61, 72, 83].map((x) => (
+      <line key={x} x1={x} y1={220} x2={x} y2={228} stroke="hsl(200, 10%, 25%)" strokeWidth={0.8} />
+    ))}
+    <rect x={72} y={182} width={10} height={40} fill="hsl(0, 0%, 30%)" />
+    <ellipse cx={77} cy={180} rx={8} ry={4} fill="hsl(0, 0%, 26%)" />
+    <ellipse cx={79} cy={170} rx={6} ry={5} fill="hsl(0, 0%, 42%)" opacity={0.35} />
+    <ellipse cx={82} cy={158} rx={5} ry={4} fill="hsl(0, 0%, 45%)" opacity={0.22} />
+    {[10, 30, 50].map((x) => (
+      <rect key={x} x={x} y={243} width={13} height={10} fill="hsl(40, 65%, 52%)" opacity={0.38} rx={1} />
+    ))}
+    <rect x={-18} y={286} width={32} height={5} fill="hsl(30, 28%, 20%)" />
+    {[-14, -6, 2, 10].map((px, pi) => (
+      <rect key={pi} x={px + 18} y={289} width={3} height={11} fill="hsl(25, 22%, 16%)" />
+    ))}
+    <text x={45} y={215} textAnchor="middle" fontSize={6} fill="hsl(200, 38%, 52%)" fontFamily="monospace">CANNERY</text>
+  </g>
+);
+
+/* ─── Fish drying racks ─── */
+const DryingRacks = () => (
   <g>
-    {[480, 1420, 2200, 3650, 5050].map((x, i) => (
-      <g key={`boat-${i}`} transform={`translate(${x}, 270)`}>
-        <path d="M0,10 Q4,0 16,0 Q28,0 32,10 Q16,13 0,10Z" fill="hsl(25, 40%, 35%)" />
-        <line x1={16} y1={0} x2={16} y2={-14} stroke="hsl(30, 20%, 30%)" strokeWidth={1.2} />
+    {[618, 1476, 2278, 3678, 5118].map((x, i) => (
+      <g key={`rack-${i}`} transform={`translate(${x}, 0)`}>
+        <line x1={0} y1={298} x2={9} y2={268} stroke="hsl(25, 28%, 23%)" strokeWidth={1.5} />
+        <line x1={20} y1={298} x2={9} y2={268} stroke="hsl(25, 28%, 23%)" strokeWidth={1.5} />
+        <line x1={-5} y1={278} x2={25} y2={278} stroke="hsl(25, 28%, 23%)" strokeWidth={1} />
+        <line x1={-5} y1={288} x2={25} y2={288} stroke="hsl(25, 28%, 23%)" strokeWidth={1} />
+        {[-3, 1, 5, 9, 13, 17].map((fx, fi) => (
+          <rect key={fi} x={fx + 5} y={279} width={2} height={8} fill="hsl(195, 28%, 46%)" rx={0.5} opacity={0.8} />
+        ))}
       </g>
     ))}
   </g>
 );
 
-/* Water patches */
-const WaterPatches = () => (
+/* ─── Seagulls in the sky ─── */
+const Seagulls = () => {
+  const birds = [
+    130, 360, 590, 820, 1080, 1350, 1640, 1950,
+    2250, 2560, 2900, 3180, 3480, 3790, 4100, 4420,
+    4750, 5060, 5380, 5700, 6020,
+  ];
+  return (
+    <g>
+      {birds.map((x, i) => (
+        <g key={`gull-${i}`} transform={`translate(${x}, ${48 + (i % 5) * 14})`}>
+          <path d="M-5,0 Q-2,-3 0,0 Q2,-3 5,0"
+            stroke="hsl(0, 0%, 78%)" strokeWidth={0.9} fill="none" opacity={0.55} />
+        </g>
+      ))}
+    </g>
+  );
+};
+
+/* ─── Fishing village scattered throughout ─── */
+const VillageHouses = () => {
+  const houses = [
+    { x: 528, w: 38, h: 44, color: 'hsl(10, 50%, 40%)', roofColor: 'hsl(20, 40%, 27%)', chimney: true, stilts: false },
+    { x: 1338, w: 42, h: 46, color: 'hsl(40, 44%, 50%)', roofColor: 'hsl(25, 35%, 30%)', chimney: true, stilts: false },
+    { x: 1492, w: 34, h: 38, color: 'hsl(200, 28%, 48%)', roofColor: 'hsl(210, 24%, 27%)', chimney: false, stilts: true },
+    { x: 2138, w: 40, h: 46, color: 'hsl(5, 44%, 43%)', roofColor: 'hsl(10, 34%, 25%)', chimney: true, stilts: false },
+    { x: 2286, w: 36, h: 40, color: 'hsl(30, 40%, 46%)', roofColor: 'hsl(20, 30%, 27%)', chimney: false, stilts: false },
+    { x: 3078, w: 38, h: 42, color: 'hsl(10, 50%, 40%)', roofColor: 'hsl(20, 40%, 27%)', chimney: true, stilts: false },
+    { x: 3678, w: 42, h: 44, color: 'hsl(200, 28%, 50%)', roofColor: 'hsl(210, 24%, 27%)', chimney: true, stilts: true },
+    { x: 4378, w: 36, h: 40, color: 'hsl(40, 44%, 50%)', roofColor: 'hsl(25, 35%, 30%)', chimney: false, stilts: false },
+    { x: 5078, w: 40, h: 46, color: 'hsl(5, 44%, 43%)', roofColor: 'hsl(10, 34%, 25%)', chimney: true, stilts: false },
+    { x: 5878, w: 38, h: 42, color: 'hsl(30, 40%, 46%)', roofColor: 'hsl(20, 30%, 27%)', chimney: false, stilts: false },
+  ];
+
+  return (
+    <g>
+      {houses.map((h, i) => {
+        const stiltsH = h.stilts ? 9 : 0;
+        const top = 300 - h.h - stiltsH;
+        return (
+          <g key={`house-${i}`}>
+            {h.stilts && [h.x + 5, h.x + h.w - 8].map((sx, si) => (
+              <rect key={si} x={sx} y={300 - stiltsH} width={3} height={stiltsH} fill="hsl(25, 24%, 18%)" />
+            ))}
+            <rect x={h.x} y={top} width={h.w} height={h.h} fill={h.color} />
+            <polygon
+              points={`${h.x - 3},${top} ${h.x + h.w / 2},${top - 15} ${h.x + h.w + 3},${top}`}
+              fill={h.roofColor}
+            />
+            <rect x={h.x + h.w / 2 - 4} y={300 - stiltsH - 14} width={8} height={14} fill="hsl(25, 28%, 19%)" rx={1} />
+            <rect x={h.x + 5} y={top + 9} width={7} height={7} fill="hsl(45, 60%, 62%)" rx={1} opacity={0.6} />
+            {h.w > 36 && (
+              <rect x={h.x + h.w - 13} y={top + 9} width={7} height={7} fill="hsl(45, 60%, 62%)" rx={1} opacity={0.55} />
+            )}
+            {h.chimney && (
+              <>
+                <rect x={h.x + Math.round(h.w * 0.65)} y={top - 18} width={6} height={18} fill="hsl(10, 18%, 22%)" />
+                <ellipse cx={h.x + Math.round(h.w * 0.65) + 3} cy={top - 21} rx={5} ry={3} fill="hsl(0, 0%, 58%)" opacity={0.14} />
+                <ellipse cx={h.x + Math.round(h.w * 0.65) + 5} cy={top - 28} rx={4} ry={2.5} fill="hsl(0, 0%, 62%)" opacity={0.09} />
+              </>
+            )}
+          </g>
+        );
+      })}
+    </g>
+  );
+};
+
+/* ─── Fishing boats with masts and rigging ─── */
+const FishingBoats = () => (
   <g>
-    {[430, 1380, 2160, 3600, 5000].map((x, i) => (
-      <rect key={`water-${i}`} x={x} y={280} width={120} height={20} fill="hsl(200, 40%, 25%)" opacity={0.4} rx={2} />
+    {[448, 1388, 2178, 3618, 5028].map((x, i) => (
+      <g key={`boat-${i}`} transform={`translate(${x}, 264)`}>
+        <path d="M0,13 Q5,0 21,0 Q37,0 42,13 Q21,17 0,13Z" fill="hsl(25, 38%, 28%)" />
+        <rect x={11} y={-9} width={17} height={9} fill="hsl(200, 18%, 36%)" rx={1} />
+        <rect x={13} y={-7} width={5} height={5} fill="hsl(40, 58%, 52%)" opacity={0.48} rx={0.5} />
+        <line x1={21} y1={-9} x2={21} y2={-28} stroke="hsl(30, 18%, 26%)" strokeWidth={1.2} />
+        <line x1={13} y1={-21} x2={31} y2={-21} stroke="hsl(30, 18%, 26%)" strokeWidth={0.8} />
+        <line x1={21} y1={-28} x2={42} y2={-9} stroke="hsl(30, 14%, 32%)" strokeWidth={0.6} opacity={0.55} />
+        <line x1={21} y1={-28} x2={4} y2={-9} stroke="hsl(30, 14%, 32%)" strokeWidth={0.6} opacity={0.45} />
+        {i % 2 === 0 && (
+          <path d="M2,9 Q6,15 12,11 Q18,15 24,11"
+            stroke="hsl(30, 18%, 38%)" strokeWidth={0.8} fill="none" opacity={0.45} />
+        )}
+      </g>
+    ))}
+  </g>
+);
+
+/* ─── Harbor docks ─── */
+const Harbor = () => (
+  <g>
+    {[398, 1348, 2128, 3578, 4978].map((x, i) => (
+      <g key={`harbor-${i}`}>
+        <rect x={x} y={278} width={155} height={22} fill="hsl(205, 44%, 20%)" opacity={0.58} rx={2} />
+        {[x + 12, x + 38, x + 66, x + 94, x + 122].map((wx, wi) => (
+          <line key={wi} x1={wx} y1={284} x2={wx + 12} y2={284}
+            stroke="hsl(200, 48%, 38%)" strokeWidth={0.6} opacity={0.28} />
+        ))}
+        <rect x={x + 22} y={272} width={92} height={6} fill="hsl(30, 28%, 20%)" rx={1} />
+        {[x + 26, x + 42, x + 58, x + 74, x + 90, x + 106].map((px, pi) => (
+          <rect key={pi} x={px} y={276} width={3} height={24} fill="hsl(25, 22%, 16%)" />
+        ))}
+        <rect x={x + 32} y={271} width={5} height={2} fill="hsl(30, 18%, 32%)" />
+        <rect x={x + 82} y={271} width={5} height={2} fill="hsl(30, 18%, 32%)" />
+      </g>
     ))}
   </g>
 );
@@ -325,6 +466,12 @@ const PhaseBackground = ({ scrollProgress, isWalking = false }: PhaseBackgroundP
           />
         ))}
 
+        {/* Seagulls */}
+        <Seagulls />
+
+        {/* Mountain range backdrop */}
+        <Mountains />
+
         {/* Rolling hills */}
         <path
           d={`M0,270 Q100,240 200,260 Q400,230 600,255 Q800,235 1000,260 Q1200,230 1400,255 Q1600,240 1800,258 Q2000,228 2200,255 Q2400,235 2600,258 Q2800,240 3000,260 Q3200,230 3400,255 Q3600,238 3800,258 Q4000,230 4200,255 Q4400,240 4600,260 Q4800,228 5000,255 Q5200,238 5400,258 Q5600,230 5800,255 Q6000,240 6200,260 L${SCENE_WIDTH},260 L${SCENE_WIDTH},300 L0,300Z`}
@@ -351,9 +498,12 @@ const PhaseBackground = ({ scrollProgress, isWalking = false }: PhaseBackgroundP
         <FutureReservoir />
 
         {/* Village elements scattered throughout */}
+        <Lighthouse />
+        <FishCannery />
         <VillageHouses />
-        <Boats />
-        <WaterPatches />
+        <DryingRacks />
+        <Harbor />
+        <FishingBoats />
 
         {/* Ground — full width */}
         <rect y={300} width={SCENE_WIDTH} height={100} fill="hsl(30, 20%, 32%)" />
