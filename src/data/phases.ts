@@ -17,8 +17,14 @@ export interface Phase {
   bgType: 'diesel' | 'early-hydro' | 'hydro-expansion' | 'battery-storage' | 'greensparc' | 'current';
 }
 
-// Baseline: AEG-reported 2001 diesel consumption (last full diesel-only year)
+// Baseline: AEG-reported 2001 diesel consumption (last full diesel-only year) — actual measured
 const BASELINE_GALLONS = 1513176;
+
+// Diesel gallon estimates for pre-EIA years use verified diesel_gen_mwh from AEDG/EIA-923
+// divided by 12.806 kWh/gal (avg efficiency 2019–2022 + 2024, excluding 2023 anomaly).
+// The 2023 EIA-923 gallon figure (699,300) is excluded: it yields 8.995 kWh/gal —
+// likely a barge-delivery receipt rather than consumption — and is not independently verifiable.
+// Hydro share percentages and diesel MWh are directly metered and reliable across all years.
 
 export const phases: Phase[] = [
   {
@@ -95,12 +101,14 @@ export const phases: Phase[] = [
     metrics: {
       year: '2024',
       energyRate: 27,
-      dieselGallons: 350000, // EIA-923 actual: 349,734 gal
+      // 4,160 MWh diesel (EIA-923 verified) ÷ 12.806 kWh/gal = ~325k
+      // Not using EIA-923 receipt gallons (349,734) — may include 2023 barge stockpile
+      dieselGallons: 325000,
       hydroPercent: 82, // EIA-923 actual: 81.77%
       hydroCapacity: 7.25,
-      dieselReduction: 77, // (1,513,176 - 350,000) / 1,513,176
+      dieselReduction: 79, // (1,513,176 - 325,000) / 1,513,176
       dieselPricePerGal: 5.27, // DCRA 2024: $5.265/gal
-      description: 'Greensparc deploys a 150 kW containerized data center at Humpback Creek in partnership with HPE and CEC — 100% hydro-powered, using 80% less energy than conventional cloud facilities. It represents ~5% of CEC\'s energy sales. In 2024 CEC achieves a record 82% hydro share, with diesel at just 350,000 gallons — saving over $6M/year vs. the diesel-only baseline.',
+      description: 'Greensparc deploys a 150 kW containerized data center at Humpback Creek in partnership with HPE and CEC — 100% hydro-powered, using 80% less energy than conventional cloud facilities. It represents ~5% of CEC\'s energy sales. In 2024 CEC achieves a record 82% hydro share — saving an estimated $6.2M/year in diesel costs compared to the pre-hydro baseline.',
     },
     bgType: 'greensparc',
   },
